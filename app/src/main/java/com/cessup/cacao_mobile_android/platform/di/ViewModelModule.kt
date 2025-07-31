@@ -10,6 +10,13 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 
+/**
+ * ViewModelModule is a module to inject and it have all viewModels.
+ *
+ * @author
+ *     Cessup
+ * @since 1.0
+ */
 @Module
 abstract class ViewModelModule {
     @Binds

@@ -1,9 +1,12 @@
 package com.cessup.cacao_mobile_android.platform.ui.session
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.cessup.cacao_mobile_android.data.UserRepositoryImpl
 import com.cessup.cacao_mobile_android.platform.utils.Router
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SignInViewModel @Inject constructor(
@@ -11,26 +14,27 @@ class SignInViewModel @Inject constructor(
     private val router: Router
 ) : ViewModel() {
 
-    suspend fun signInAction(email:String, keyword: String) {
-        val result = repository.signIn(email,keyword)
+    private val _authResult = MutableStateFlow<Result<String>?>(null)
+    val authResult: StateFlow<Result<String>?> = _authResult
 
-        result.collect { token ->
-            if(token.isNotEmpty()){
-                Log.i("SIGN_IN_ACTION", token)
-                router.navigateToHome(token)
-            }else{
-                Log.i("SIGN_IN_ACTION", token)
-                router.navigateToHome("token")
+
+    fun access(email: String, password: String) {
+        viewModelScope.launch {
+            repository.authenticate(email, password).collect { result ->
+                _authResult.value = result
             }
         }
     }
 
-    fun signUpAction() {
+    fun loginAction() {
+        router.navigateToHome()
+    }
+
+    fun registerAction() {
         router.navigateToSignUp()
     }
 
-    fun forgotAction() {
+    fun forgotPasswordAction() {
         router.navigateToForgot()
     }
-
 }

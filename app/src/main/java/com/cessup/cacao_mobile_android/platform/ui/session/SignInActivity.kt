@@ -1,6 +1,7 @@
 package com.cessup.cacao_mobile_android.platform.ui.session
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,18 +12,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import com.cessup.cacao_mobile_android.App
 import com.cessup.cacao_mobile_android.platform.di.ViewModelFactory
 import com.cessup.cacao_mobile_android.platform.ui.theme.CacaoTheme
 import jakarta.inject.Inject
-import kotlinx.coroutines.launch
 import kotlin.getValue
 
+/**
+ * SignInActivity got the screen about access to the system.
+ *
+ * @author
+ *     Cessup
+ * @since 1.0
+ */
 class SignInActivity : ComponentActivity() {
 
     @Inject lateinit var viewModelFactory: ViewModelFactory
@@ -33,28 +39,13 @@ class SignInActivity : ComponentActivity() {
 
         (application as App).appComponent.inject(this)
 
+
         enableEdgeToEdge()
         setContent {
             ->
             CacaoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
-                    SignInScreen(it,
-                        {email,password ->
-                        lifecycleScope.launch {
-                            viewModel.signInAction(email,password)
-                        }
-                        },
-                        {
-                            lifecycleScope.launch {
-                                viewModel.signUpAction()
-                            }
-                        },
-                        {
-                            lifecycleScope.launch {
-                                viewModel.forgotAction()
-                            }
-                        }
-                    )
+                    SignInScreen(viewModel,it)
                 }
             }
         }
@@ -63,13 +54,31 @@ class SignInActivity : ComponentActivity() {
 
 @Composable
 fun SignInScreen(
-    paddingValues: PaddingValues,
-    onSignInClick: (String, String) -> Unit,
-    onRegisterClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit
+    viewModel: SignInViewModel,
+    paddingValues: PaddingValues
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val authResult by viewModel.authResult.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(authResult) {
+        authResult.let {
+            if(it!=null){
+                when {
+                    it.isSuccess -> {
+                        viewModel.loginAction()
+                    }
+                    it.isFailure -> {
+                        val error = it.exceptionOrNull()
+                        // show error message
+                        Toast.makeText(context, "Exception: ${error?.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -120,7 +129,7 @@ fun SignInScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
-                    onClick = { onSignInClick(email, password) },
+                    onClick = { viewModel.access(email, password) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
@@ -135,17 +144,10 @@ fun SignInScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 TextButton(
-                    onClick = onForgotPasswordClick,
+                    onClick = { viewModel.forgotPasswordAction() },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
-                    TextButton(
-                        onClick = onForgotPasswordClick,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                    ) {
-                        Text("Forgot password?")
-                    }
+                    Text("Forgot password?")
                 }
             }
         }
@@ -153,20 +155,12 @@ fun SignInScreen(
         Spacer(modifier = Modifier.height(200.dp))
 
         TextButton(
-            onClick = onRegisterClick,
+            onClick = { viewModel.registerAction() },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
         ) {
             Text("Don’t have an account? Sign up.")
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SignInScreenPreview() {
-    CacaoTheme {
-        SignInScreen(PaddingValues(0.dp),{email,password->},{},{})
     }
 }

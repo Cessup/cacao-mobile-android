@@ -7,6 +7,15 @@ import com.cessup.cacao_mobile_android.platform.ui.session.ForgotActivity
 import com.cessup.cacao_mobile_android.platform.ui.session.SignInActivity
 import com.cessup.cacao_mobile_android.platform.ui.session.SignUpActivity
 
+/**
+ * Router helps to navigate in different screens
+ *
+ * @param Context the context in the applications that is use in the intent.
+ *
+ * @author
+ *     Cessup
+ * @since 1.0
+ */
 class Router(private val context: Context) {
     fun navigateToSignIn(){
         val intent = Intent(context, SignInActivity::class.java)
@@ -26,15 +35,10 @@ class Router(private val context: Context) {
         context.startActivity(intent)
     }
 
-    fun navigateToHome(token: String){
+    fun navigateToHome(){
         val intent = Intent(context, HomeActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.putExtra(DataShare.TOKEN_VALUE.name,token)
         context.startActivity(intent)
     }
-}
-
-enum class DataShare{
-    TOKEN_VALUE
 }
