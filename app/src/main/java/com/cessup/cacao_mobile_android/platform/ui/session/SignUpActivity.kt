@@ -41,6 +41,13 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 import kotlin.getValue
 
+/**
+ * SignUpActivity got the screen about create a new user.
+ *
+ * @author
+ *     Cessup
+ * @since 1.0
+ */
 class SignUpActivity : ComponentActivity() {
 
     @Inject lateinit var viewModelFactory: ViewModelFactory

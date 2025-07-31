@@ -11,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Blue80,
-    secondary = BlueGrey80,
-    tertiary = Cyan80,
+    primary = Brown80,
+    secondary = Tan80,
+    tertiary = Sand80,
     surface= White100,
     surfaceVariant= White100,
     onSurface = Black100,
@@ -21,9 +21,9 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Blue40,
-    secondary = BlueGrey40,
-    tertiary = Cyan40,
+    primary = Brown40,
+    secondary = Tan40,
+    tertiary = Sand40,
     surface = Black100,
     surfaceVariant= Black100,
     onSurface = White100,
@@ -47,7 +47,7 @@ fun CacaoTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    var colorScheme = when {
+    val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
