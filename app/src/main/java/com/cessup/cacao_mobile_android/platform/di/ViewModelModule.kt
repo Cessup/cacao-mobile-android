@@ -30,7 +30,7 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(SignUpViewModel::class)
-    abstract fun bindSignUpViewModel(viewModel: SignInViewModel): ViewModel
+    abstract fun bindSignUpViewModel(viewModel: SignUpViewModel): ViewModel
 
     @Binds
     @IntoMap

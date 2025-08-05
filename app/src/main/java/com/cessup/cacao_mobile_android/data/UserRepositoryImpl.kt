@@ -66,7 +66,7 @@ class UserRepositoryImpl @Inject constructor(
      * @param user the user information from the services is here
      * @return a user
      */
-    override suspend fun insertUser(user: User): Flow<Result<Any>> =
+    override suspend fun insertUser(user: User): Flow<Result<String>> =
         flow {
             try {
                 val registerUserRequest = RegisterUserRequest(

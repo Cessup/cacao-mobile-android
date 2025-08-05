@@ -39,7 +39,6 @@ class SignInActivity : ComponentActivity() {
 
         (application as App).appComponent.inject(this)
 
-
         enableEdgeToEdge()
         setContent {
             ->
@@ -52,6 +51,9 @@ class SignInActivity : ComponentActivity() {
     }
 }
 
+/**
+ * This function is the UI about Sign in
+ */
 @Composable
 fun SignInScreen(
     viewModel: SignInViewModel,
