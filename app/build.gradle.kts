@@ -5,14 +5,16 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+apply(plugin = "dagger.hilt.android.plugin")
+
 android {
     namespace = "com.cessup.cacao_mobile_android"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.cessup.cacao_mobile_android"
         minSdk = 30
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -41,7 +43,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -74,22 +75,22 @@ dependencies {
     implementation (libs.rxandroid)
 
     //Dependencies Injection
-    implementation(libs.dagger)
-    ksp(libs.dagger.compiler)
-    implementation(libs.androidx.core.ktx.v1131)
+    implementation (libs.androidx.hilt.navigation.compose)
+    implementation (libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
+    //Network
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
 
+    //Navigation
+    implementation(libs.androidx.navigation.compose)
 
     //Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    // Testing
-    testImplementation ("junit:junit:4.13.2")
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-    testImplementation ("com.squareup.okhttp3:mockwebserver:4.10.0")
-    testImplementation ("org.mockito:mockito-core:5.3.1")
+    testImplementation (libs.kotlinx.coroutines.test)
+    testImplementation (libs.mockwebserver)
+    testImplementation (libs.mockito.core)
 }

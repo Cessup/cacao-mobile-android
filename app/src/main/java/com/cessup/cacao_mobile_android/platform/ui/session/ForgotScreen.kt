@@ -1,13 +1,8 @@
 package com.cessup.cacao_mobile_android.platform.ui.session
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +14,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,52 +26,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.cessup.cacao_mobile_android.App
-import com.cessup.cacao_mobile_android.platform.di.ViewModelFactory
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.cessup.cacao_mobile_android.platform.ui.theme.CacaoTheme
-import jakarta.inject.Inject
-import kotlin.getValue
-
-/**
- * ForgotActivity got the screen about the reset password.
- *
- * @author
- *     Cessup
- * @since 1.0
- */
-class ForgotActivity : ComponentActivity() {
-
-    @Inject lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: ForgotViewModel by viewModels { viewModelFactory }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (application as App).appComponent.inject(this)
-        enableEdgeToEdge()
-        setContent {
-            ->
-            CacaoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
-                    ForgotScreen(it
-                    ) {
-                        viewModel.nextAction()
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun ForgotScreen(
-    paddingValues: PaddingValues,
     onNextOnClick: () -> Unit
 ) {
+    val viewModel: ForgotViewModel = hiltViewModel()
+
     var email by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
-            .padding(paddingValues)
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -136,6 +97,6 @@ fun ForgotScreen(
 @Composable
 fun ForgotScreenPreview() {
     CacaoTheme {
-        ForgotScreen(PaddingValues(0.dp)) { }
+        ForgotScreen { }
     }
 }

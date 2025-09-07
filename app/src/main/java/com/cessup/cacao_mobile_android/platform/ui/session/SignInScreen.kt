@@ -1,88 +1,33 @@
 package com.cessup.cacao_mobile_android.platform.ui.session
 
-import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.cessup.cacao_mobile_android.App
-import com.cessup.cacao_mobile_android.platform.di.ViewModelFactory
-import com.cessup.cacao_mobile_android.platform.ui.theme.CacaoTheme
-import jakarta.inject.Inject
-import kotlin.getValue
-
-/**
- * SignInActivity got the screen about access to the system.
- *
- * @author
- *     Cessup
- * @since 1.0
- */
-class SignInActivity : ComponentActivity() {
-
-    @Inject lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: SignInViewModel by viewModels { viewModelFactory }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        (application as App).appComponent.inject(this)
-
-
-        enableEdgeToEdge()
-        setContent {
-            ->
-            CacaoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
-                    SignInScreen(viewModel,it)
-                }
-            }
-        }
-    }
-}
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun SignInScreen(
-    viewModel: SignInViewModel,
-    paddingValues: PaddingValues
+    onSignInClick: (String) -> Unit,
+    onRegisterClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
 ) {
+    val viewModel: SignInViewModel = hiltViewModel()
+
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var keyword by remember { mutableStateOf("") }
 
-    val authResult by viewModel.authResult.collectAsState()
-    val context = LocalContext.current
+    val token by viewModel.token.collectAsState()
 
-    LaunchedEffect(authResult) {
-        authResult.let {
-            if(it!=null){
-                when {
-                    it.isSuccess -> {
-                        viewModel.loginAction()
-                    }
-                    it.isFailure -> {
-                        val error = it.exceptionOrNull()
-                        // show error message
-                        Toast.makeText(context, "Exception: ${error?.message}", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        }
-    }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
-            .padding(paddingValues)
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -113,23 +58,40 @@ fun SignInScreen(
                     value = email,
                     onValueChange = { email = it },
                     label = { Text("Email") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    supportingText = {
+                        if (errorMessage != null) {
+                            Text(text = errorMessage!!, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = keyword,
+                    onValueChange = { keyword = it },
                     label = { Text("Password") },
                     visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    supportingText = {
+                        if (errorMessage != null) {
+                            Text(text = errorMessage!!, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
-                    onClick = { viewModel.access(email, password) },
+                    onClick = {
+                        if (token.isBlank()) {
+                            errorMessage = "Field cannot be empty"
+                        } else {
+                            errorMessage = null
+                            onSignInClick(token)
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
@@ -144,10 +106,17 @@ fun SignInScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 TextButton(
-                    onClick = { viewModel.forgotPasswordAction() },
+                    onClick = onForgotPasswordClick,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
-                    Text("Forgot password?")
+                    TextButton(
+                        onClick = onForgotPasswordClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                    ) {
+                        Text("Forgot password?")
+                    }
                 }
             }
         }
@@ -155,7 +124,7 @@ fun SignInScreen(
         Spacer(modifier = Modifier.height(200.dp))
 
         TextButton(
-            onClick = { viewModel.registerAction() },
+            onClick = onRegisterClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)

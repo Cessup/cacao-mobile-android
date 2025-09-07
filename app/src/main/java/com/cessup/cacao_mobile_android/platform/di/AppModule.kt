@@ -1,6 +1,7 @@
 package com.cessup.cacao_mobile_android.platform.di
 
-import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.cessup.cacao_mobile_android.data.UserRepositoryImpl
 import com.cessup.cacao_mobile_android.data.source.local.db.AppDatabase
@@ -10,10 +11,13 @@ import com.cessup.cacao_mobile_android.data.source.local.temp.LocalStorageImpl
 import com.cessup.cacao_mobile_android.data.source.remote.ApiClient
 import com.cessup.cacao_mobile_android.data.source.remote.ApiService
 import com.cessup.cacao_mobile_android.domain.repository.UserRepository
-import com.cessup.cacao_mobile_android.platform.utils.Router
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+
 
 /**
  * AppModule is a class with some modules for injection in this application.
@@ -23,30 +27,32 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Module
-class AppModule(private val application: Application) {
-    /**
-     * This function provide the router to navigate between views.
-     */
-    @Provides
-    @Singleton
-    fun provideRouter(): Router = Router(application)
+@InstallIn(SingletonComponent::class)
+object AppModule {
+
     /**
      * This function provide a local storage.
      */
     @Provides
     @Singleton
-    fun provideLocalStorage(): LocalStorage {
-        return LocalStorageImpl(application)
+    fun provideLocalStorage(@ApplicationContext context: Context): LocalStorage {
+        return LocalStorageImpl(context)
+    }
+    /**
+     * This function provide
+     */
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
     }
     /**
      * This function provide
      */
     @Provides @Singleton
-    fun provideDataBase(): AppDatabase =
-        Room.databaseBuilder(application, AppDatabase::class.java, "app.db").build()
-    /**
-     * This function provide
-     */
+    fun provideDataBase(@ApplicationContext context: Context): AppDatabase =
+        Room.databaseBuilder(context, AppDatabase::class.java, "app.db").build()
+
     @Provides @Singleton
     fun provideUserDao(db: AppDatabase): UserDao = db.userDao()
     /**
