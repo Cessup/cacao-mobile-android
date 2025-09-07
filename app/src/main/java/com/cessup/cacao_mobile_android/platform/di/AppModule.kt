@@ -1,6 +1,5 @@
 package com.cessup.cacao_mobile_android.platform.di
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
@@ -10,29 +9,26 @@ import com.cessup.cacao_mobile_android.data.source.local.db.user.UserDao
 import com.cessup.cacao_mobile_android.data.source.remote.ApiClient
 import com.cessup.cacao_mobile_android.data.source.remote.ApiService
 import com.cessup.cacao_mobile_android.domain.repository.UserRepository
-import com.cessup.cacao_mobile_android.platform.utils.Router
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+
 @Module
-class AppModule(private val application: Application) {
-    @Provides
-    fun provideContext(): Context = application
-
+@InstallIn(SingletonComponent::class)
+object AppModule {
     @Provides
     @Singleton
-    fun provideRouter(): Router = Router(application)
-
-    @Provides
-    @Singleton
-    fun provideSharedPreferences(): SharedPreferences {
-        return application.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
     }
 
     @Provides @Singleton
-    fun provideDataBase(): AppDatabase =
-        Room.databaseBuilder(application, AppDatabase::class.java, "app.db").build()
+    fun provideDataBase(@ApplicationContext context: Context): AppDatabase =
+        Room.databaseBuilder(context, AppDatabase::class.java, "app.db").build()
 
     @Provides @Singleton
     fun provideUserDao(db: AppDatabase): UserDao = db.userDao()

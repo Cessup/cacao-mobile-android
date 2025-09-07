@@ -1,13 +1,7 @@
 package com.cessup.cacao_mobile_android.platform.ui.session
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +13,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,51 +26,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
-import com.cessup.cacao_mobile_android.App
-import com.cessup.cacao_mobile_android.platform.di.ViewModelFactory
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.cessup.cacao_mobile_android.platform.ui.theme.CacaoTheme
-import jakarta.inject.Inject
-import kotlinx.coroutines.launch
-import kotlin.getValue
-
-class SignUpActivity : ComponentActivity() {
-
-    @Inject lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: SignUpViewModel by viewModels { viewModelFactory }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (application as App).appComponent.inject(this)
-        enableEdgeToEdge()
-        setContent {
-            ->
-            CacaoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
-                    SignUpScreen(it
-                    ) { email, password ->
-                        lifecycleScope.launch {
-                            viewModel.signUp(email, password)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun SignUpScreen(
-    paddingValues: PaddingValues,
-    onSignUpClick: (String, String) -> Unit
+    onSignUpClick: () -> Unit
 ) {
+    val viewModel: SignUpViewModel = hiltViewModel()
+
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
-            .padding(paddingValues)
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -134,7 +97,7 @@ fun SignUpScreen(
                 Spacer(modifier = Modifier.height(50.dp))
 
                 Button(
-                    onClick = { onSignUpClick(username, password) },
+                    onClick = onSignUpClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
@@ -156,6 +119,6 @@ fun SignUpScreen(
 @Composable
 fun SignUpScreenPreview() {
     CacaoTheme {
-        SignUpScreen(PaddingValues(0.dp)) { email, password -> }
+        SignUpScreen{}
     }
 }

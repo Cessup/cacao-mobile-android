@@ -1,36 +1,35 @@
 package com.cessup.cacao_mobile_android.platform.ui.session
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.cessup.cacao_mobile_android.data.UserRepositoryImpl
-import com.cessup.cacao_mobile_android.platform.utils.Router
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SignInViewModel @Inject constructor(
-    private val repository: UserRepositoryImpl,
-    private val router: Router
+    private val repository: UserRepositoryImpl
 ) : ViewModel() {
 
-    suspend fun signInAction(email:String, keyword: String) {
-        val result = repository.signIn(email,keyword)
+    private val _token = MutableStateFlow("")
+    val token: StateFlow<String> = _token
 
-        result.collect { token ->
-            if(token.isNotEmpty()){
-                Log.i("SIGN_IN_ACTION", token)
-                router.navigateToHome(token)
-            }else{
-                Log.i("SIGN_IN_ACTION", token)
-                router.navigateToHome("token")
-            }
-        }
+    private val _name = MutableLiveData<String>("Alice")
+    val name: LiveData<String> = _name
+
+     fun signInAction(email:String, keyword: String) {
+
+         viewModelScope.launch {
+             val result = repository.signIn(email,keyword)
+
+             result.collect { token ->
+                 _token.value = token
+             }
+         }
     }
-
-    fun signUpAction() {
-        router.navigateToSignUp()
-    }
-
-    fun forgotAction() {
-        router.navigateToForgot()
-    }
-
 }

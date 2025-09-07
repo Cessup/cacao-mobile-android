@@ -2,17 +2,12 @@ package com.cessup.cacao_mobile_android.platform.ui.session
 
 import androidx.lifecycle.ViewModel
 import com.cessup.cacao_mobile_android.data.UserRepositoryImpl
-import com.cessup.cacao_mobile_android.platform.utils.Router
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-
+@HiltViewModel
 class ForgotViewModel @Inject constructor(
-    private val repository: UserRepositoryImpl,
-    private val router: Router
+    private val repository: UserRepositoryImpl
 ) : ViewModel() {
-
-    fun nextAction(){
-        router.navigateToSignIn()
-    }
 
 }
