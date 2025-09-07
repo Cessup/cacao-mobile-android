@@ -9,11 +9,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.cessup.cacao_mobile_android.platform.ui.eatable.DrinksScreen
 import com.cessup.cacao_mobile_android.platform.ui.home.HomeScreen
 import com.cessup.cacao_mobile_android.platform.ui.session.ForgotScreen
 import com.cessup.cacao_mobile_android.platform.ui.session.SignInScreen
 import com.cessup.cacao_mobile_android.platform.ui.session.SignUpScreen
 
+/**
+ * The NavHost in Compose
+ *
+ * There are all graphs about every flow in the application
+ *
+ * @author
+ *     Cessup
+ * @since 1.0
+ */
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()
@@ -24,6 +34,12 @@ fun AppNavHost() {
     }
 }
 
+/**
+ * authNavGraph is the function navigate in session flow
+ *
+ * @param navController the navController is the view control
+ *
+ */
 fun NavGraphBuilder.authNavGraph(
     navController: NavController) {
 
@@ -68,6 +84,12 @@ fun NavGraphBuilder.authNavGraph(
     }
 }
 
+/**
+ * homeNavGraph is the function navigate in home flow
+ *
+ * @param navController the navController is the view control
+ *
+ */
 fun NavGraphBuilder.homeNavGraph(navController: NavController) {
     navigation(
         route = HomeGraph.Root.route,
@@ -82,7 +104,13 @@ fun NavGraphBuilder.homeNavGraph(navController: NavController) {
             )
         ) { backStackEntry ->
             val token = backStackEntry.arguments?.getString(HomeGraph.DataShare.TOKEN_VALUE.name) ?: ""
-            HomeScreen(token = token)
+            HomeScreen(token = token,{
+                navController.navigate(HomeGraph.DrinkMenu.route)
+            })
+        }
+
+        composable(HomeGraph.DrinkMenu.route) {
+            DrinksScreen()
         }
     }
 }

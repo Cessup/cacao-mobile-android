@@ -3,19 +3,26 @@ package com.cessup.cacao_mobile_android.platform.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.cessup.cacao_mobile_android.data.DrinkRepositoryImpl
+import com.cessup.cacao_mobile_android.data.MealRepositoryImpl
 import com.cessup.cacao_mobile_android.data.UserRepositoryImpl
 import com.cessup.cacao_mobile_android.data.source.local.db.AppDatabase
 import com.cessup.cacao_mobile_android.data.source.local.db.user.UserDao
 import com.cessup.cacao_mobile_android.data.source.local.temp.LocalStorage
 import com.cessup.cacao_mobile_android.data.source.local.temp.LocalStorageImpl
 import com.cessup.cacao_mobile_android.data.source.remote.ApiClient
-import com.cessup.cacao_mobile_android.data.source.remote.ApiService
+import com.cessup.cacao_mobile_android.data.source.remote.DrinkService
+import com.cessup.cacao_mobile_android.data.source.remote.MealService
+import com.cessup.cacao_mobile_android.data.source.remote.UserService
 import com.cessup.cacao_mobile_android.domain.repository.UserRepository
+import com.cessup.domain.repositories.eatable.DrinkRepository
+import com.cessup.domain.repositories.eatable.MealRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 
@@ -55,16 +62,34 @@ object AppModule {
 
     @Provides @Singleton
     fun provideUserDao(db: AppDatabase): UserDao = db.userDao()
-    /**
-     * This function provide
-     */
     @Provides
     @Singleton
-    fun provideApiService(): ApiService = ApiClient.retrofitInstance
-    /**
-     * This function provide
-     */
+    fun provideApiService(): Retrofit = ApiClient.retrofitInstance
+
+    @Provides
+    @Singleton
+    fun provideUserService(retrofit: Retrofit): UserService =
+        retrofit.create(UserService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDrinkService(retrofit: Retrofit): DrinkService =
+        retrofit.create(DrinkService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMealService(retrofit: Retrofit): MealService =
+        retrofit.create(MealService::class.java)
+
     @Provides @Singleton
-    fun provideUserRepository(userDao : UserDao, api : ApiService, localStorage : LocalStorage): UserRepository = UserRepositoryImpl(userDao = userDao, api = api, localStorage = localStorage)
+    fun provideUserRepository(userDao : UserDao, api : UserService, localStorage: LocalStorage): UserRepository = UserRepositoryImpl(userDao = userDao, api = api, localStorage = localStorage)
+
+    @Provides @Singleton
+    fun provideDrinkRepository(drinkService : DrinkService): DrinkRepository =
+        DrinkRepositoryImpl(api = drinkService)
+
+    @Provides @Singleton
+    fun provideMealRepository(mealService : MealService): MealRepository =
+        MealRepositoryImpl(api = mealService)
 }
 

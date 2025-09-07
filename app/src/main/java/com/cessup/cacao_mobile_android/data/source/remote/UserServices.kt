@@ -1,6 +1,6 @@
 package com.cessup.cacao_mobile_android.data.source.remote
 
-import com.cessup.cacao_mobile_android.data.entities.UserEntity
+import com.cessup.cacao_mobile_android.data.entities.user.UserEntity
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -10,7 +10,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 /**
- * ApiService is an interface about services from server.
+ * UserService is an interface about services from server.
  *
  * There are function to communicate with the server
  *
@@ -18,7 +18,7 @@ import retrofit2.http.Path
  *     Cessup
  * @since 1.0
  */
-interface ApiService {
+interface UserService {
     /**
      * This function authenticate a user in the system.
      *

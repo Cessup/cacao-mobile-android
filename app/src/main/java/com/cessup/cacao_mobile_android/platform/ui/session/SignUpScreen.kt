@@ -29,6 +29,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cessup.cacao_mobile_android.platform.ui.theme.CacaoTheme
 
+/**
+ * The Sign Un View is the interface to user register system
+ *
+ * @author
+ *     Cessup
+ * @since 1.0
+ */
 @Composable
 fun SignUpScreen(
     onSignUpClick: () -> Unit

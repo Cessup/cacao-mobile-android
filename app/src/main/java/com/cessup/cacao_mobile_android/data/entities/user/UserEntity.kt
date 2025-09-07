@@ -1,4 +1,4 @@
-package com.cessup.cacao_mobile_android.data.entities
+package com.cessup.cacao_mobile_android.data.entities.user
 
 /**
  * Represents a user.

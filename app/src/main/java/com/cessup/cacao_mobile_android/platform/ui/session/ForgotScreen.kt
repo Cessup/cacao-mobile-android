@@ -29,6 +29,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cessup.cacao_mobile_android.platform.ui.theme.CacaoTheme
 
+/**
+ * The Forgot View is the interface to recovery password
+ *
+ * This Screen use when the user forgot the password that is in session flow
+ *
+ * @author
+ *     Cessup
+ * @since 1.0
+ */
 @Composable
 fun ForgotScreen(
     onNextOnClick: () -> Unit

@@ -3,10 +3,10 @@ package com.cessup.cacao_mobile_android.data
 import com.cessup.cacao_mobile_android.data.exceptions.AuthenticationException
 import com.cessup.cacao_mobile_android.data.source.local.db.user.UserDao
 import com.cessup.cacao_mobile_android.data.source.local.temp.LocalStorage
-import com.cessup.cacao_mobile_android.data.source.remote.ApiService
 import com.cessup.cacao_mobile_android.data.source.remote.AuthenticateRequest
 import com.cessup.cacao_mobile_android.data.source.remote.RegisterUserDetailsRequest
 import com.cessup.cacao_mobile_android.data.source.remote.RegisterUserRequest
+import com.cessup.cacao_mobile_android.data.source.remote.UserService
 import com.cessup.cacao_mobile_android.domain.model.User
 import com.cessup.cacao_mobile_android.domain.model.UserDetails
 import com.cessup.cacao_mobile_android.domain.repository.UserRepository
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val localStorage: LocalStorage,
     private val userDao: UserDao,
-    private val api: ApiService
+    private val api: UserService
 ) : UserRepository{
 
     /**

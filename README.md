@@ -21,7 +21,8 @@ Here's a list of features included in this project:
 
 | Name                                                                                                                                      | Description                                                   |
 |-------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
-| [Session](https://www.postman.com/cessupx/cacao-workspace/folder/goo6ezk/session-services?action=share&source=copy-link&creator=46920782) | There are all services about session like sign in or sing up. |
+| [Session](https://www.postman.com/cessupx/cacao-workspace/folder/goo6ezk/session-services) | There are all services about session like sign in or sing up. |
+| [Eatable](https://www.postman.com/cessupx/cacao-workspace/folder/fjmlivp/eatable-services) | There are all services about eatable like drinks and meals.   |
 
 ## Figma Design
 

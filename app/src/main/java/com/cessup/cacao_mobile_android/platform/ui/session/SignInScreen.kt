@@ -11,6 +11,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
+/**
+ * The Sign In View is the interface to user to access system
+ *
+ * @author
+ *     Cessup
+ * @since 1.0
+ */
 @Composable
 fun SignInScreen(
     onSignInClick: (String) -> Unit,
@@ -85,7 +92,8 @@ fun SignInScreen(
 
                 Button(
                     onClick = {
-                        if (token.isBlank()) {
+                        viewModel.signInAction(email,keyword)
+                        if (token.isNotEmpty()) {
                             errorMessage = "Field cannot be empty"
                         } else {
                             errorMessage = null

@@ -20,11 +20,10 @@ object ApiClient {
      *
      * @return ApiService that is the object with all services.
      */
-    val retrofitInstance: ApiService by lazy {
+    val retrofitInstance: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ApiService::class.java)
     }
 }
