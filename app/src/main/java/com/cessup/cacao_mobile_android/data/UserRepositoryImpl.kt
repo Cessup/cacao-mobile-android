@@ -2,9 +2,9 @@ package com.cessup.cacao_mobile_android.data
 
 import com.cessup.cacao_mobile_android.data.source.local.db.user.UserDao
 import com.cessup.cacao_mobile_android.data.source.local.db.user.UserEntity
-import com.cessup.cacao_mobile_android.data.source.remote.ApiService
 import com.cessup.cacao_mobile_android.data.source.remote.SignInRequest
 import com.cessup.cacao_mobile_android.data.source.remote.SignUpRequest
+import com.cessup.cacao_mobile_android.data.source.remote.UserService
 import com.cessup.cacao_mobile_android.domain.model.User
 import com.cessup.cacao_mobile_android.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
-    private val api: ApiService
+    private val api: UserService
 ) : UserRepository{
 
     override suspend fun insert(user: User) = userDao.insert(UserEntity(0,user.username))

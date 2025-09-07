@@ -2,6 +2,7 @@ package com.cessup.cacao_mobile_android.platform.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.cessup.cacao_mobile_android.platform.ui.eatable.DrinkViewModel
 import com.cessup.cacao_mobile_android.platform.ui.home.HomeViewModel
 import com.cessup.cacao_mobile_android.platform.ui.session.ForgotViewModel
 import com.cessup.cacao_mobile_android.platform.ui.session.SignInViewModel
@@ -34,4 +35,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(HomeViewModel::class)
     abstract fun bindHomeViewModel(viewModel: HomeViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DrinkViewModel::class)
+    abstract fun bindDrinkViewModel(viewModel: DrinkViewModel): ViewModel
 }

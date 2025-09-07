@@ -1,5 +1,6 @@
 package com.cessup.cacao_mobile_android.platform.di
 
+import com.cessup.cacao_mobile_android.platform.ui.eatable.DrinkActivity
 import com.cessup.cacao_mobile_android.platform.ui.home.HomeActivity
 import com.cessup.cacao_mobile_android.platform.ui.session.ForgotActivity
 import com.cessup.cacao_mobile_android.platform.ui.session.SignInActivity
@@ -14,4 +15,5 @@ interface AppComponent {
     fun inject(activity: SignUpActivity)
     fun inject(activity: ForgotActivity)
     fun inject(activity: HomeActivity)
+    fun inject(activity: DrinkActivity)
 }

@@ -3,16 +3,24 @@ package com.cessup.cacao_mobile_android.platform.ui.home
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
-import com.cessup.cacao_mobile_android.domain.model.User
-import com.cessup.cacao_mobile_android.domain.repository.UserRepository
-import kotlinx.coroutines.flow.SharingStarted
+import com.cessup.domain.models.eatable.drink.Beer
+import com.cessup.domain.repositories.eatable.DrinkRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class HomeViewModel @Inject constructor(
-    repository: UserRepository
+    repository: DrinkRepository
 ) : ViewModel() {
 
-    val users: StateFlow<List<User>> = repository.getAllUser()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    private val _beers = MutableStateFlow<List<Beer>>(emptyList())
+    val beers: StateFlow<List<Beer>> = _beers
+
+    init {
+        viewModelScope.launch {
+            repository.getBeers().collect { beerList ->
+                _beers.value = beerList
+            }
+        }
+    }
 }

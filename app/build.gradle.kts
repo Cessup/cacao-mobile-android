@@ -78,8 +78,12 @@ dependencies {
     ksp(libs.dagger.compiler)
     implementation(libs.androidx.core.ktx.v1131)
 
+    //Network
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+
+    //Image
+    implementation(libs.coil.compose)
 
 
     //Testing
@@ -88,8 +92,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Testing
-    testImplementation ("junit:junit:4.13.2")
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-    testImplementation ("com.squareup.okhttp3:mockwebserver:4.10.0")
-    testImplementation ("org.mockito:mockito-core:5.3.1")
+    testImplementation (libs.kotlinx.coroutines.test)
+    testImplementation (libs.mockwebserver)
+    testImplementation (libs.mockito.core)
 }
