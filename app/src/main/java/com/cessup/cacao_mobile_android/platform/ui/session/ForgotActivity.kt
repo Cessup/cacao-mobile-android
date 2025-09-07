@@ -38,6 +38,13 @@ import com.cessup.cacao_mobile_android.platform.ui.theme.CacaoTheme
 import jakarta.inject.Inject
 import kotlin.getValue
 
+/**
+ * ForgotActivity got the screen about the reset password.
+ *
+ * @author
+ *     Cessup
+ * @since 1.0
+ */
 class ForgotActivity : ComponentActivity() {
 
     @Inject lateinit var viewModelFactory: ViewModelFactory

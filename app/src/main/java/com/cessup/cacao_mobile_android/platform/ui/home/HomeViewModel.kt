@@ -2,25 +2,10 @@ package com.cessup.cacao_mobile_android.platform.ui.home
 
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject
-import androidx.lifecycle.viewModelScope
-import com.cessup.domain.models.eatable.drink.Beer
-import com.cessup.domain.repositories.eatable.DrinkRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import com.cessup.cacao_mobile_android.domain.repository.UserRepository
 
 class HomeViewModel @Inject constructor(
-    repository: DrinkRepository
+    repository: UserRepository
 ) : ViewModel() {
 
-    private val _beers = MutableStateFlow<List<Beer>>(emptyList())
-    val beers: StateFlow<List<Beer>> = _beers
-
-    init {
-        viewModelScope.launch {
-            repository.getBeers().collect { beerList ->
-                _beers.value = beerList
-            }
-        }
-    }
 }
