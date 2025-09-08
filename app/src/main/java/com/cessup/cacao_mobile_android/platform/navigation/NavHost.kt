@@ -6,11 +6,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.cessup.cacao_mobile_android.platform.ui.eatable.DrinksScreen
 import com.cessup.cacao_mobile_android.platform.ui.home.HomeScreen
+import com.cessup.cacao_mobile_android.platform.ui.network.NetworkErrorScreen
 import com.cessup.cacao_mobile_android.platform.ui.session.ForgotScreen
 import com.cessup.cacao_mobile_android.platform.ui.session.SignInScreen
 import com.cessup.cacao_mobile_android.platform.ui.session.SignUpScreen
@@ -29,8 +30,34 @@ fun AppNavHost() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = AuthGraph.Root.route) {
+        generalNavGraph(navController)
         authNavGraph(navController)
         homeNavGraph(navController)
+    }
+}
+
+/**
+ * generalNavGraph is the function navigate in home flow
+ *
+ * @param navController the navController is the view control
+ *
+ */
+fun NavGraphBuilder.generalNavGraph(navController: NavController) {
+    navigation(
+        route = GeneralGraph.Root.route,
+        startDestination = GeneralGraph.NetworkError.route
+    ) {
+        composable(
+            route = GeneralGraph.NetworkError.routeWithArgs,
+            arguments = listOf(
+                navArgument(GeneralGraph.DataShare.ERROR_VALUE.name) {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val error = backStackEntry.arguments?.getString(GeneralGraph.DataShare.ERROR_VALUE.name) ?: ""
+            NetworkErrorScreen(error = error)
+        }
     }
 }
 
@@ -50,6 +77,9 @@ fun NavGraphBuilder.authNavGraph(
 
         composable(AuthGraph.SignIn.route) {
             SignInScreen(
+                onNavNetworkError = {
+                    navController.navigate(GeneralGraph.NetworkError.withArgs(error= it))
+                },
                 onSignInClick = {
                     navController.navigate(HomeGraph.Home.withArgs(token= it)) {
                         popUpTo(AuthGraph.Root.route) { inclusive = true }

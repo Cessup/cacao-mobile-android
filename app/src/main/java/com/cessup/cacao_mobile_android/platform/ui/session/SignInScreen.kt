@@ -1,11 +1,13 @@
 package com.cessup.cacao_mobile_android.platform.ui.session
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -20,17 +22,44 @@ import androidx.hilt.navigation.compose.hiltViewModel
  */
 @Composable
 fun SignInScreen(
+    onNavNetworkError: (String) -> Unit,
     onSignInClick: (String) -> Unit,
     onRegisterClick: () -> Unit,
     onForgotPasswordClick: () -> Unit
 ) {
     val viewModel: SignInViewModel = hiltViewModel()
+    val state by viewModel.uiState.collectAsState()
 
+    val context = LocalContext.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ){
+        when (state) {
+            is UiState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            is UiState.NetworkError -> onNavNetworkError((state as UiState.NetworkError).message)
+            is UiState.Success -> onSignInClick((state as UiState.Success).data)
+            is UiState.Error -> Toast.makeText(context,(state as UiState.Error).message, Toast.LENGTH_LONG).show()
+            is UiState.Normal ->
+                SignInContent(
+                onSignInClick ={ email,keyword -> viewModel.signInAction(email,keyword) },
+                onRegisterClick= onRegisterClick,
+                onForgotPasswordClick= onForgotPasswordClick
+                )
+        }
+    }
+}
+
+@Composable
+fun SignInContent(
+    onSignInClick: (String, String) -> Unit,
+    onRegisterClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
+){
     var email by remember { mutableStateOf("") }
     var keyword by remember { mutableStateOf("") }
-
-    val token by viewModel.token.collectAsState()
-
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     Column(
@@ -40,6 +69,7 @@ fun SignInScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+
         Spacer(modifier = Modifier.height(50.dp))
 
         Text(
@@ -92,13 +122,7 @@ fun SignInScreen(
 
                 Button(
                     onClick = {
-                        viewModel.signInAction(email,keyword)
-                        if (token.isNotEmpty()) {
-                            errorMessage = "Field cannot be empty"
-                        } else {
-                            errorMessage = null
-                            onSignInClick(token)
-                        }
+                        onSignInClick(email,keyword)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -140,4 +164,12 @@ fun SignInScreen(
             Text("Don’t have an account? Sign up.")
         }
     }
+}
+
+sealed class UiState {
+    object Normal : UiState()
+    object Loading : UiState()
+    data class NetworkError(val message: String) : UiState()
+    data class Success(val data: String) : UiState()
+    data class Error(val message: String) : UiState()
 }
